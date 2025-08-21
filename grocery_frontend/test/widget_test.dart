@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grocery_frontend/main.dart';
-import 'package:grocery_frontend/services/api_client.dart';
+import 'package:grocery_frontend/services/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  late ApiClient mockApiClient;
-
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
-    final prefs = await SharedPreferences.getInstance();
-    mockApiClient = ApiClient(
-      baseUrl: 'http://localhost:8080/api',
-      prefs: prefs,
-    );
+    await ServiceLocator.initialize();
   });
 
   testWidgets('App displays welcome message', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp(apiClient: mockApiClient));
+    await tester.pumpWidget(const MyApp());
 
     // Find Scaffold widget to verify Material components are being used
     final scaffoldFinder = find.byType(Scaffold);
@@ -41,7 +35,7 @@ void main() {
   });
 
   testWidgets('App bar has correct title', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp(apiClient: mockApiClient));
+    await tester.pumpWidget(const MyApp());
 
     // Find AppBar title
     final titleFinder = find.widgetWithText(AppBar, 'Grocery Store');
